@@ -1,8 +1,60 @@
-const { app, BrowserWindow } = require('electron');
-const createWindow = () => {
-  const win = new BrowserWindow({ width: 800, height: 600 });
-  win.loadFile('index.html');
-};
+const { app, BrowserWindow, ipcMain } = require('electron');
+const { WebContentsView } = require('electron');
+const path = require('path');
+
+let mainWindow;
+let contentView;
+
+function createWindow() {
+  mainWindow = new BrowserWindow({
+    width: 1000,
+    height: 700,
+    webPreferences: {
+      preload: path.join(__dirname, 'preload.js'),
+      contextIsolation: true,
+      nodeIntegration: false
+    }
+  });
+
+  mainWindow.loadFile('index.html');
+
+  contentView = new WebContentsView({
+    webPreferences: { backgroundThrottling: false }
+  });
+  mainWindow.contentView.addChildView(contentView);
+  contentView.webContents.loadURL('https://www.example.com');
+  updateBounds();
+
+  contentView.webContents.on('did-finish-load', () => console.log('Content loaded'));
+  contentView.webContents.on('did-fail-load', (e, code, desc) => console.error(`Fail: ${code} - ${desc}`));
+
+  mainWindow.on('resize', updateBounds);
+}
+
+function updateBounds() {
+  const winBounds = mainWindow.getBounds();
+  contentView.setBounds({ x: 0, y: 60, width: winBounds.width, height: winBounds.height - 60 });
+}
+
+ipcMain.on('navigate', (event, { action, url }) => {
+  console.log(`Navigating: ${action} to ${url}`);
+  if (action === 'load') contentView.webContents.loadURL(url);
+  if (action === 'back') contentView.webContents.goBack();
+  if (action === 'forward') contentView.webContents.goForward();
+  if (action === 'reload') contentView.webContents.reload();
+  if (action === 'home') contentView.webContents.loadURL('https://www.example.com');
+
+  contentView.webContents.once('did-navigate', () => {
+    mainWindow.webContents.send('url-updated', contentView.webContents.getURL());
+  });
+});
+
 app.whenReady().then(createWindow);
-app.on('window-all-closed', () => { if (process.platform !== 'darwin') app.quit(); });
-app.on('activate', () => { if (BrowserWindow.getAllWindows().length === 0) createWindow(); });
+
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') app.quit();
+});
+
+app.on('activate', () => {
+  if (BrowserWindow.getAllWindows().length === 0) createWindow();
+});
