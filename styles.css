@@ -31,6 +31,13 @@ body {
   gap: 10px;
 }
 
+.preview-area {
+  flex-grow: 1;
+  background-color: white;
+  min-height: 100px;
+  width: 180px;
+}
+
 button {
   padding: 8px 12px;
   border: 1px solid #ccc;
@@ -45,7 +52,16 @@ button:hover {
   background-color: #e0e0e0;
 }
 
-#urlInput, #sidebarUrlInput {
+#sidebarUrlInput {
+  flex-grow: 0;
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+}
+
+#urlInput {
   flex-grow: 1;
   padding: 8px;
   font-size: 14px;

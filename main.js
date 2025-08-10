@@ -4,6 +4,7 @@ const path = require('path');
 
 let mainWindow;
 let contentView;
+let previewView;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -23,6 +24,13 @@ function createWindow() {
   });
   mainWindow.contentView.addChildView(contentView);
   contentView.webContents.loadURL('https://www.example.com');
+
+  previewView = new WebContentsView({
+    webPreferences: { backgroundThrottling: false }
+  });
+  mainWindow.contentView.addChildView(previewView);
+  previewView.webContents.loadURL('https://www.google.com');
+
   updateBounds();
 
   contentView.webContents.on('did-finish-load', () => console.log('Content loaded'));
@@ -33,6 +41,10 @@ function createWindow() {
     return { action: 'deny' };
   });
 
+  previewView.webContents.on('did-finish-load', () => {
+    mainWindow.webContents.send('preview-url-updated', previewView.webContents.getURL());
+  });
+
   mainWindow.on('resize', updateBounds);
 }
 
@@ -41,8 +53,12 @@ function updateBounds() {
   contentView.setBounds({ x: 200, y: 60, width: winBounds.width - 200, height: winBounds.height - 60 });
 }
 
+ipcMain.on('set-preview-bounds', (event, bounds) => {
+  previewView.setBounds(bounds);
+});
+
 ipcMain.on('navigate', (event, { action, url }) => {
-  console.log(`Navigating: ${action} to ${url}`);
+  console.log(`Navigating main: ${action} to ${url}`);
   if (action === 'load') contentView.webContents.loadURL(url);
   if (action === 'back') contentView.webContents.goBack();
   if (action === 'forward') contentView.webContents.goForward();
@@ -51,6 +67,15 @@ ipcMain.on('navigate', (event, { action, url }) => {
 
   contentView.webContents.once('did-navigate', () => {
     mainWindow.webContents.send('url-updated', contentView.webContents.getURL());
+  });
+});
+
+ipcMain.on('preview-navigate', (event, { action, url }) => {
+  console.log(`Navigating preview: ${action} to ${url}`);
+  if (action === 'load') previewView.webContents.loadURL(url);
+
+  previewView.webContents.once('did-navigate', () => {
+    mainWindow.webContents.send('preview-url-updated', previewView.webContents.getURL());
   });
 });
 
