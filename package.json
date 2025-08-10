@@ -7,10 +7,35 @@
   "author": "Rosneuros <nulc@ya.ru>",
   "license": "Apache-2.0",
   "private": false,
-  "scripts":{
-    "start": "electron ."
+  "scripts": {
+    "start": "electron .",
+    "postinstall": "electron-builder install-app-deps",
+    "package": "electron-builder --dir",
+    "make": "electron-builder"
+  },
+  "build": {
+    "appId": "ru.nondex",
+    "productName": "nondex",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "index.html"
+    ],
+    "mac": {
+      "target": "dmg"
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "linux": {
+      "target": "AppImage"
+    }
   },
   "dependencies": {
-    "electron": "^37.2.6"
+  },
+  "devDependencies": {
+    "electron-builder": "^26.0.12"
   }
 }
