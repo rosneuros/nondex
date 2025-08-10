@@ -21,7 +21,11 @@
     },
     "files": [
       "main.js",
-      "index.html"
+      "index.html",
+      "sidebar.html",
+      "preload.js",
+      "renderer.js",
+      "styles.css"
     ],
     "mac": {
       "target": "dmg"

@@ -8,8 +8,8 @@ let previewView;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
-    width: 1000,
-    height: 700,
+    width: 1400,
+    height: 900,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
@@ -29,7 +29,7 @@ function createWindow() {
     webPreferences: { backgroundThrottling: false }
   });
   mainWindow.contentView.addChildView(previewView);
-  previewView.webContents.loadURL('https://www.google.com');
+  previewView.webContents.loadFile('./sidebar.html');
 
   updateBounds();
 
@@ -78,6 +78,9 @@ ipcMain.on('navigate', (event, { action, url }) => {
 ipcMain.on('preview-navigate', (event, { action, url }) => {
   console.log(`Navigating preview: ${action} to ${url}`);
   if (action === 'load') previewView.webContents.loadURL(url);
+  if (action === 'back') previewView.webContents.goBack();
+  if (action === 'forward') previewView.webContents.goForward();
+  if (action === 'home') previewView.webContents.loadFile('./sidebar.html');
 
   previewView.webContents.once('did-navigate', () => {
     mainWindow.webContents.send('preview-url-updated', previewView.webContents.getURL());

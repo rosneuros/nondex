@@ -11,6 +11,9 @@ const mailBtn = document.getElementById('mailBtn');
 const yandexBtn = document.getElementById('yandexBtn');
 const googleBtn = document.getElementById('googleBtn');
 const previewArea = document.getElementById('previewArea');
+const sidebarBackBtn = document.getElementById('sidebarBackBtn');
+const sidebarForwardBtn = document.getElementById('sidebarForwardBtn');
+const sidebarHomeBtn = document.getElementById('sidebarHomeBtn');
 
 homeBtn.addEventListener('click', () => window.electronAPI.navigate('home'));
 backBtn.addEventListener('click', () => window.electronAPI.navigate('back'));
@@ -18,7 +21,7 @@ reloadBtn.addEventListener('click', () => window.electronAPI.navigate('reload'))
 forwardBtn.addEventListener('click', () => window.electronAPI.navigate('forward'));
 goBtn.addEventListener('click', () => {
   let url = urlInput.value.trim();
-  if (!url.startsWith('http://') && !url.startsWith('https://')) url = 'http://' + url;
+  if (!url.startsWith('http://') && !url.startsWith('https://') && !url.startsWith('file://')) url = 'http://' + url;
   window.electronAPI.navigate('load', url);
 });
 
@@ -26,9 +29,12 @@ urlInput.addEventListener('keypress', (event) => {
   if (event.key === 'Enter') goBtn.click();
 });
 
+sidebarHomeBtn.addEventListener('click', () => window.electronAPI.previewNavigate('home'));
+sidebarBackBtn.addEventListener('click', () => window.electronAPI.previewNavigate('back'));
+sidebarForwardBtn.addEventListener('click', () => window.electronAPI.previewNavigate('forward'));
 sidebarGoBtn.addEventListener('click', () => {
   let url = sidebarUrlInput.value.trim();
-  if (!url.startsWith('http://') && !url.startsWith('https://')) url = 'http://' + url;
+  if (!url.startsWith('http://') && !url.startsWith('https://') && !url.startsWith('file://')) url = 'http://' + url;
   window.electronAPI.previewNavigate('load', url);
 });
 
