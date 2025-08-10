@@ -28,12 +28,17 @@ function createWindow() {
   contentView.webContents.on('did-finish-load', () => console.log('Content loaded'));
   contentView.webContents.on('did-fail-load', (e, code, desc) => console.error(`Fail: ${code} - ${desc}`));
 
+  contentView.webContents.setWindowOpenHandler(({ url }) => {
+    contentView.webContents.loadURL(url);
+    return { action: 'deny' };
+  });
+
   mainWindow.on('resize', updateBounds);
 }
 
 function updateBounds() {
   const winBounds = mainWindow.getBounds();
-  contentView.setBounds({ x: 0, y: 60, width: winBounds.width, height: winBounds.height - 60 });
+  contentView.setBounds({ x: 200, y: 60, width: winBounds.width - 200, height: winBounds.height - 60 });
 }
 
 ipcMain.on('navigate', (event, { action, url }) => {

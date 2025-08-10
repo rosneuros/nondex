@@ -17,6 +17,20 @@ body {
   gap: 10px;
 }
 
+.sidebar {
+  position: absolute;
+  left: 0;
+  top: 60px;
+  width: 180px;
+  height: calc(100% - 60px);
+  background-color: #f0f0f0;
+  border-right: 1px solid #e0e0e0;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
 button {
   padding: 8px 12px;
   border: 1px solid #ccc;
@@ -31,7 +45,7 @@ button:hover {
   background-color: #e0e0e0;
 }
 
-#urlInput {
+#urlInput, #sidebarUrlInput {
   flex-grow: 1;
   padding: 8px;
   font-size: 14px;
@@ -40,7 +54,7 @@ button:hover {
   outline: none;
 }
 
-#urlInput:focus {
+#urlInput:focus, #sidebarUrlInput:focus {
   border-color: #007BFF;
   box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
 }
