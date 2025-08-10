@@ -1,0 +1,16 @@
+{
+  "name": "nondex",
+  "version": "0.0.1",
+  "description": "Nondex - news extractor",
+  "main": "main.js",
+  "repository": "https://github.com/rosneuros/nondex.git",
+  "author": "Rosneuros <nulc@ya.ru>",
+  "license": "Apache-2.0",
+  "private": false,
+  "scripts":{
+    "start": "electron ."
+  },
+  "dependencies": {
+    "electron": "^37.2.6"
+  }
+}
