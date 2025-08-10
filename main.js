@@ -41,6 +41,11 @@ function createWindow() {
     return { action: 'deny' };
   });
 
+  previewView.webContents.setWindowOpenHandler(({ url }) => {
+    contentView.webContents.loadURL(url);
+    return { action: 'deny' };
+  });
+
   previewView.webContents.on('did-finish-load', () => {
     mainWindow.webContents.send('preview-url-updated', previewView.webContents.getURL());
   });
