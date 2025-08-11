@@ -23,7 +23,7 @@ function createWindow() {
     webPreferences: { backgroundThrottling: false }
   });
   mainWindow.contentView.addChildView(contentView);
-  contentView.webContents.loadURL('https://www.example.com');
+  contentView.webContents.loadURL('https://www.perplexity.com');
 
   previewView = new WebContentsView({
     webPreferences: { backgroundThrottling: false }
@@ -68,7 +68,7 @@ ipcMain.on('navigate', (event, { action, url }) => {
   if (action === 'back') contentView.webContents.goBack();
   if (action === 'forward') contentView.webContents.goForward();
   if (action === 'reload') contentView.webContents.reload();
-  if (action === 'home') contentView.webContents.loadURL('https://www.example.com');
+  if (action === 'home') contentView.webContents.loadURL('https://perplexity.com');
 
   contentView.webContents.once('did-navigate', () => {
     mainWindow.webContents.send('url-updated', contentView.webContents.getURL());
